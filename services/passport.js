@@ -11,7 +11,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    User.findById(id)
+    User.findById(mongoose.Types.ObjectId(id))
         .then(user => {
             done(null, user);
         })
@@ -42,9 +42,21 @@ passport.use(
         callbackURL: '/auth/bnet/callback',
         region: 'us'
     },
-        (accessToken, refreshToken, profile, done) => {
-             console.log(profile.id);
-            return done(null, profile);
+        async (accessToken, refreshToken, profile, done) => {
+            console.log(profile.id);
+            try {
+                const blizzardAccountAuthenticated = await User.findOne({blizzardId: profile.id});
+
+                if ( blizzardAccountAuthenticated) {
+                    return done(null, blizzardAccountAuthenticated);
+                }
+                const newBlizzardAccountAuth = await User.findOneAndUpdate({blizzardId: profile.id})
+                done(null, newBlizzardAccountAuth);  
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
+          
         }
     )
 );
