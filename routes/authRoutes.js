@@ -12,7 +12,9 @@ module.exports = app => {
     app.get('/auth/bnet/callback',
         passport.authenticate('bnet', { failureRedirect: '/'}),
         (req, res) => {
-            res.send(req.user);          
+            res.send(req.user);
+            console.log(res);
+            console.log(req);          
         }
     );
 
