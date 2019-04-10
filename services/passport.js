@@ -49,7 +49,7 @@ passport.use(
             try {
                 const blizzardAccountAuthenticated = await User.findOne({blizzardId: profile.id});
 
-                if ( blizzardAccountAuthenticated) {
+                if (blizzardAccountAuthenticated) {
                     return done(null, blizzardAccountAuthenticated);
                 }
                 const newBlizzardAccountAuth = await User.findOneAndUpdate({blizzardId: profile.id})
